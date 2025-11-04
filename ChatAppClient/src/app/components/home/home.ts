@@ -1,6 +1,6 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, HostListener, signal } from '@angular/core';
+import { Component, HostListener, inject, LOCALE_ID, signal } from '@angular/core';
 import { UserModel } from '../../models/user.model';
 import { ChatModel } from '../../models/chat.model';
 import { Router } from '@angular/router';
@@ -15,13 +15,17 @@ import { FormsModule } from '@angular/forms';
   ],
   templateUrl: './home.html',
   styleUrl: './home.css',
+  providers: [
+    DatePipe
+  ]
 })
 
 export default class Home {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private datePipe: DatePipe
   ) {
 
     this.user = JSON.parse(localStorage.getItem("accessToken") ?? "")
@@ -62,21 +66,21 @@ export default class Home {
   @HostListener('window:beforeunload', ['$event']) handleBeforeUnload(event: BeforeUnloadEvent) {
 
     if (!performance.getEntriesByType("navigation").some((e: any) => e.type === "reload")) {
-      
+
       this.hub?.stop();
 
     }
-    
+
   }
 
   users = signal<UserModel[]>([])
   chats = signal<ChatModel[]>([])
+
   selectedUserId: string = "";
   selectedUser: UserModel = new UserModel()
   user = new UserModel()
   hub: signalR.HubConnection | undefined
   message: string = ""
-
 
   getUsers() {
 
@@ -94,7 +98,16 @@ export default class Home {
 
     this.http.get<ChatModel[]>(`https://localhost:7016/api/Chat/GetChats?userId=${this.user.id}&toUserId=${this.selectedUserId}`)
       .subscribe(res => {
+
         this.chats.set(res)
+
+        this.chats.set(
+          this.chats().map(val => ({
+            ...val,
+            date: this.datePipe.transform(val.date, 'd MMMM y, HH:mm', '', 'tr') ?? ''
+          }))
+        );
+
       })
 
   }
@@ -124,6 +137,7 @@ export default class Home {
     this.http.post<ChatModel>(`https://localhost:7016/api/Chat/SendMessage`, data)
       .subscribe(res => {
 
+        res.date = this.datePipe.transform(res.date, 'dd MMMM y, HH:mm', '', 'tr') ?? ''
         this.chats.set([...this.chats(), res])
         this.message = ""
 

@@ -19,7 +19,7 @@ namespace ChatAppServer.WebApi.Hubs
 
             if (user != null)
             {
-                user.Status = "online";
+                user.Status = "Online";
                 await context.SaveChangesAsync();
 
                 // Inform frontend of the changes
@@ -40,7 +40,7 @@ namespace ChatAppServer.WebApi.Hubs
 
             if (user != null)
             {
-                user.Status = "offline";
+                user.Status = "Offline";
                 await context.SaveChangesAsync();
 
                 // Inform frontend of the changes

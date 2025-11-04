@@ -1,14 +1,14 @@
-<div class="container">
+<div class="container" style="height: 98vh;">
   <div class="row clearfix">
     <div>
-      <h1 class="alert alert-dark text-center mt-2 text-success">Whats Up?</h1>
-      <button class="btn btn-outline-danger" style="float: right;" (click)="logout()">Çıkış Yap</button>
+      <h1 class="alert alert-warning text-center mt-1 text-success">Whats Up?</h1>
+      <button class="btn btn-danger mb-1" style="float: right;" (click)="logout()">Çıkış Yap</button>
     </div>
     <div class="col-lg-12 mt-2">
       <div class="card chat-app">
         <div id="plist" class="people-list">
           <div class="input-group" style="position: relative;">
-            <input type="text" class="form-control" placeholder="Search..." style="padding-left:35px;">
+            <input type="text" class="form-control  " placeholder="Search..." style="padding-left:35px;">
             <i class="fa fa-search" style="position: absolute; top:10px; left: 15px;"></i>
           </div>
           <ul class="list-unstyled chat-list mt-2 mb-0">
@@ -45,7 +45,7 @@
               @if(selectedUserId != chat.userId){
               <li class="clearfix d-flex" style="flex-direction: column; width: 100%; align-items:flex-end;">
                 <div class="message-data">
-                  <span class="message-data-time">{{chat.date}}</span>
+                  <span class="message-data-time">{{ chat.date }}</span>
                 </div>
                 <div class="message other-message"> {{chat.message}} </div>
               </li>
@@ -61,16 +61,35 @@
             </ul>
           </div>
           <div class="chat-message clearfix">
-            <div class="input-group mb-0">
-              <div (click)="sendMessage()" class="input-group-prepend">
+            <div class="input-group mb-0 gap-2">
+
+              <input [(ngModel)]="message" type="text" class="form-control rounded pb-2"
+                placeholder="Göndermek için metin giriniz..." style="height: 30px;">
+
+              <div (click)="sendMessage()" class="rounded button-div">
                 <span class="input-group-text"><i class="fa fa-send"></i></span>
               </div>
-              <input [(ngModel)]="message" type="text" class="form-control" placeholder="Enter text here..." style="height: 30px;">
+
             </div>
           </div>
         </div>
         }@else {
-        
+
+        <div class="chat">
+          <div class="chat-header clearfix d-flex justify-content-center align-items-center">
+            <div class="chat-about">
+              <h6 class="pt-2">What's Up Chat'e Hoş Geldiniz!</h6>
+            </div>
+          </div>
+          <div class="chat-history d-flex align-items-center justify-content-center" style="height: 600px;">
+            <span class="text-danger-emphasis" style="font-size: xx-large; opacity: 25%;">Konuşmak için arkadaş
+              seçiniz!</span>
+          </div>
+          <div class="chat-message clearfix">
+
+          </div>
+        </div>
+
         }
 
       </div>
